@@ -1,0 +1,246 @@
+DROP TABLE IF EXISTS Clients;
+
+CREATE TABLE Clients (
+idClients INTEGER PRIMARY KEY AUTOINCREMENT,
+fio VARCHAR(30),
+age INTEGER,
+gender VARCHAR(30),
+pass VARCHAR(30)
+);
+
+DROP TABLE IF EXISTS TrainerSpec;
+
+CREATE TABLE TrainerSpec (
+idTrainerSpec INTEGER PRIMARY KEY AUTOINCREMENT,
+spec VARCHAR(40)
+);
+
+
+DROP TABLE IF EXISTS Trainer;
+
+CREATE TABLE Trainer (
+idTrainer INTEGER PRIMARY KEY AUTOINCREMENT,
+idTrainerSpec INTEGER,
+fio_tr VARCHAR(30),
+price INTEGER,
+trainer_desc BLOB,
+tr_desc BLOB,
+FOREIGN KEY (idTrainerSpec) REFERENCES TrainerSpec (idTrainerSpec) on DELETE CASCADE ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS TrainerRasp;
+
+CREATE TABLE TrainerRasp(
+idTrainerRasp INTEGER PRIMARY KEY AUTOINCREMENT,
+idTrainer INTEGER,
+data_tr DATE,
+nach_tr TIME,
+kon_tr TIME,
+FOREIGN KEY (idTrainer) REFERENCES Trainer (idTrainer) on DELETE CASCADE ON UPDATE CASCADE
+);
+
+DROP TABLE IF EXISTS Poseshenie;
+CREATE TABLE Poseshenie (
+ idPoseshenie INTEGER PRIMARY KEY AUTOINCREMENT,
+ idClients INTEGER,
+ idTrainerRasp INTEGER NOT NULL,
+ pos_data DATE,
+ pos_time TIME,
+ oplata TINYINT,
+FOREIGN KEY (idClients) references Clients(idClients) on delete cascade on update cascade,
+FOREIGN KEY (idTrainerRasp) references TrainerRasp (idTrainerRasp) on delete cascade on update cascade
+);
+
+DROP TABLE IF EXISTS Hour;
+
+CREATE TABLE Hour (
+number INTEGER
+);
+
+DROP VIEW IF EXISTS Timing;
+
+CREATE VIEW Timing AS
+SELECT Trainer.idTrainer as idTr, idTrainerRasp  as rasp, data_tr as date,
+nach_tr + Hour.number as hour
+FROM TrainerRasp
+CROSS JOIN Hour 
+JOIN Trainer on TrainerRasp.idTrainer = Trainer.idTrainer
+WHERE hour < 21 AND hour <=(kon_tr + 0);
+
+INSERT INTO Clients (idClients, fio, age, gender, pass)
+VALUES (1,'Иван Иванов', 20, 'Муж', '123456');
+
+INSERT INTO Clients (idClients, fio, age, gender, pass)
+VALUES (2,'Ира Иванова', 46, 'Жен', '654321');
+
+INSERT INTO Clients (idClients, fio, age, gender, pass)
+VALUES (3,'Артём Петров', 45, 'Муж', '123451');
+
+INSERT INTO Clients (idClients, fio, age, gender, pass)
+VALUES (4,'Ольга Петрова', 18, 'Жен', '154321');
+
+INSERT INTO Clients (idClients, fio, age, gender, pass)
+VALUES (5,'Александр Сергеев', 23, 'Муж', '213452');
+
+INSERT INTO Clients (idClients, fio, age, gender, pass)
+VALUES (6,'Софья Сергеева', 21, 'Жен', '254312');
+
+INSERT INTO Clients (idClients, fio, age, gender, pass)
+VALUES (7,'Дарья Лебедева', 25, 'Жен', '425261');
+
+INSERT INTO Clients (idClients, fio, age, gender, pass)
+VALUES (8,'Олег Нито', 16, 'Муж', '222333');
+
+INSERT INTO Clients (idClients, fio, age, gender, pass)
+VALUES (9,'Геральт Ривеев', 18, 'Муж', '241684');
+
+INSERT INTO Clients (idClients, fio, age, gender, pass)
+VALUES (10,'Татьяна Ким', 24, 'Жен', '423152');
+
+INSERT INTO TrainerSpec (spec)
+VALUES ('ОФП');
+
+INSERT INTO TrainerSpec (spec)
+VALUES ('Бодибилдинг');
+
+INSERT INTO TrainerSpec (spec)
+VALUES ('Женский бодибилдинг');
+
+INSERT INTO TrainerSpec (spec)
+VALUES ('Пуэрлифтинг');
+
+INSERT INTO TrainerSpec (spec)
+VALUES ('Женский пауэрлифтинг');
+
+INSERT INTO TrainerSpec (spec)
+VALUES ('Плавание');
+
+INSERT INTO TrainerSpec (spec)
+VALUES ('Бокс');
+
+INSERT INTO TrainerSpec (spec)
+VALUES ('ММА');
+
+INSERT INTO TrainerSpec (spec)
+VALUES ('Водное ОФП');
+
+INSERT INTO TrainerSpec (spec)
+VALUES ('Танцы');
+
+INSERT INTO Trainer (idTrainerSpec, fio_tr, price)
+VALUES (1, 'Андрей Петренко', 100);
+
+INSERT INTO Trainer (idTrainerSpec, fio_tr, price)
+VALUES (2, 'Анатолий Силач', 200);
+
+INSERT INTO Trainer (idTrainerSpec, fio_tr, price)
+VALUES (3, 'Елена Красавишна',300);
+
+INSERT INTO Trainer (idTrainerSpec, fio_tr, price)
+VALUES (4, 'Евгений Жимович', 400);
+
+INSERT INTO Trainer (idTrainerSpec, fio_tr, price)
+VALUES (5, 'Ольга Тяговая', 500);
+
+INSERT INTO Trainer (idTrainerSpec, fio_tr, price)
+VALUES (6, 'Олег Поплавок', 600);
+
+INSERT INTO Trainer (idTrainerSpec, fio_tr, price)
+VALUES (7, 'Виктор Фист', 700);
+
+INSERT INTO Trainer (idTrainerSpec, fio_tr, price)
+VALUES (8, 'Алекасндр Кик', 800);
+
+INSERT INTO Trainer (idTrainerSpec, fio_tr, price)
+VALUES (9, 'Юлия Суша', 900);
+
+INSERT INTO Trainer (idTrainerSpec, fio_tr, price)
+VALUES (10, 'Михаил Мигель', 1000);
+
+INSERT INTO Trainer (idTrainerSpec, fio_tr, price)
+VALUES (5, 'Фаина Фарма', 500);
+
+INSERT INTO Trainer (idTrainerSpec, fio_tr, price)
+VALUES (10, 'Валентина Шест', 1000);
+
+INSERT INTO TrainerRasp (idTrainer, data_tr, nach_tr , kon_tr )
+VALUES (1, '2022-10-20', '12:00', '14:00');
+
+INSERT INTO TrainerRasp (idTrainer, data_tr, nach_tr, kon_tr)
+VALUES (2, '2022-10-17', '14:00', '15:00');
+
+INSERT INTO TrainerRasp (idTrainer, data_tr, nach_tr, kon_tr)
+VALUES (3, '2022-10-10', '13:00', '14:00');
+
+INSERT INTO TrainerRasp (idTrainer, data_tr, nach_tr, kon_tr)
+VALUES (4, '2022-10-17', '16:00', '17:00');
+
+INSERT INTO TrainerRasp (idTrainer, data_tr, nach_tr, kon_tr)
+VALUES (5, '2022-10-14', '15:00', '16:00');
+
+INSERT INTO TrainerRasp (idTrainer, data_tr, nach_tr, kon_tr)
+VALUES (6, '2022-10-13', '14:00', '15:00');
+
+INSERT INTO TrainerRasp (idTrainer, data_tr, nach_tr, kon_tr)
+VALUES (7, '2022-10-26', '18:00', '20:00');
+
+INSERT INTO TrainerRasp (idTrainer, data_tr, nach_tr, kon_tr)
+VALUES (8, '2022-10-30', '9:00', '10:00');
+
+INSERT INTO TrainerRasp (idTrainer, data_tr, nach_tr, kon_tr)
+VALUES (9, '2022-10-31', '14:00', '18:00');
+
+INSERT INTO TrainerRasp (idTrainer, data_tr, nach_tr, kon_tr)
+VALUES (10, '2022-10-24', '16:00', '18:00');
+
+INSERT INTO TrainerRasp (idTrainer, data_tr, nach_tr, kon_tr)
+VALUES (5, '2022-10-25', '13:00', '18:00');
+
+INSERT INTO TrainerRasp (idTrainer, data_tr, nach_tr, kon_tr)
+VALUES (4, '2022-10-09', '17:00', '20:00');
+
+INSERT INTO TrainerRasp (idTrainer, data_tr, nach_tr, kon_tr)
+VALUES (4, '2022-10-23', '16:00', '19:00');
+
+INSERT INTO TrainerRasp (idTrainer, data_tr, nach_tr, kon_tr)
+VALUES (9, '2022-10-06', '16:00', '18:00');
+
+INSERT INTO TrainerRasp (idTrainer, data_tr, nach_tr, kon_tr)
+VALUES (10, '2022-10-25', '16:00', '18:00');
+
+INSERT INTO Hour (number)
+VALUES (0);
+
+INSERT INTO Hour (number)
+VALUES (1);
+
+INSERT INTO Hour (number)
+VALUES (2);
+
+INSERT INTO Hour (number)
+VALUES (3);
+
+INSERT INTO Hour (number)
+VALUES (4);
+
+INSERT INTO Hour (number)
+VALUES (5);
+
+INSERT INTO Hour (number)
+VALUES (6);
+
+INSERT INTO Hour (number)
+VALUES (7);
+
+INSERT INTO Hour (number)
+VALUES (8);
+
+INSERT INTO Hour (number)
+VALUES (9);
+
+INSERT INTO Hour (number)
+VALUES (10);
+
+
+INSERT INTO Poseshenie (idTrainerRasp, pos_data, pos_time)
+select rasp, date, hour from Timing;
